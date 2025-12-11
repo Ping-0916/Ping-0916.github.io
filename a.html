@@ -1,13 +1,568 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-     <title>測試用網站</title>
-      <link rel="icon" href="icon.png">
-  </head>
-    <body>
-      Hello world
-    </body>
-  
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>記憶翻牌遊戲</title>
+
+<!-- 使用可愛圓潤字體（若無網路，會回退到系統可用圓體） -->
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --purple-1: #CBB7FF;
+    --purple-2: #A88BFF;
+    --accent: #EBDCFF;
+    --card-front: #E9E0FF;
+    --card-back: #F1E8FF;
+    --border: #5C3B8A; /* 粗描邊 */
+    --text: #3e2a5a;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: "Baloo 2", "Microsoft JhengHei", "PingFang TC", "Helvetica", sans-serif;
+    background: linear-gradient(160deg, #F7F3FF 0%, #F6F8FF 40%, #F3F1FF 100%);
+    color:var(--text);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:22px;
+  }
+
+  /* 大標題 */
+  .site-header{
+    margin-bottom:14px;
+    text-align:center;
+  }
+  .site-title {
+    display:inline-block;
+    padding:12px 22px;
+    border-radius:18px;
+    background: linear-gradient(90deg,var(--purple-1),var(--purple-2));
+    color:white;
+    font-size:34px;
+    font-weight:700;
+    letter-spacing:2px;
+    box-shadow: 0 8px 22px rgba(88,52,151,0.12), inset 0 -4px 10px rgba(255,255,255,0.12);
+    border:6px solid var(--border); /* 粗描邊 */
+    transform: translateY(4px);
+  }
+  .site-sub{
+    margin-top:8px;
+    font-size:13px;
+    color:#6e5891;
+  }
+
+  /* 控制列 */
+  .controls{
+    margin:14px 0;
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+  .btn {
+    background: white;
+    border-radius:14px;
+    padding:8px 14px;
+    font-weight:600;
+    border:3px solid var(--border);
+    cursor:pointer;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+  }
+  .btn.purple{
+    background:linear-gradient(90deg,var(--purple-2),var(--purple-1));
+    color:white;
+  }
+
+  /* 遊戲區（置中） 5x4 */
+  .game-wrap{ 
+    width: max-content;
+    padding:18px;
+    border-radius:18px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.6));
+    box-shadow: 0 12px 30px rgba(86,45,140,0.08);
+    border:4px solid rgba(92,59,138,0.06);
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(5, 120px);
+    grid-auto-rows: 120px;
+    gap:14px;
+    padding:6px;
+  }
+
+  /* 卡片外殼 */
+  .card {
+    width:120px;
+    height:120px;
+    perspective:1000px;
+  }
+
+  /* 內部可翻轉面 */
+  .card-inner{
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition: transform 0.5s cubic-bezier(.2,.9,.3,1);
+    cursor:pointer;
+  }
+
+  .card.flip .card-inner{
+    transform: rotateY(180deg);
+  }
+
+  .card-face{
+    position:absolute;
+    inset:0;
+    border-radius:22px;
+    backface-visibility:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border:6px solid var(--border); /* 粗邊框 */
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    overflow:hidden;
+  }
+
+  /* 背面＝未翻（圖案）*/
+  .face-back{
+    background: linear-gradient(180deg, var(--card-front), var(--accent));
+  }
+
+  /* 正面＝翻開（顯示動物）*/
+  .face-front{
+    background: linear-gradient(180deg, var(--card-back), #fff);
+    transform: rotateY(180deg);
+  }
+
+  /* SVG 尺寸 */
+  .icon{
+    width:72px;
+    height:72px;
+    transform: translateY(-4px);
+  }
+
+  /* 匹配過的卡片效果 */
+  .matched .card-face{
+    filter: saturate(1.05) brightness(1.02);
+    box-shadow: 0 10px 22px rgba(95,48,150,0.12), 0 0 0 6px rgba(168,139,255,0.08);
+  }
+
+  /* 小資訊列 */
+  .status{
+    margin-top:10px;
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    font-size:14px;
+    color:#5a3f88;
+  }
+
+  /* 彈窗 */
+  .overlay{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background: rgba(15,7,30,0.35);
+    z-index:50;
+  }
+  .overlay.show{ display:flex; }
+
+  .dialog{
+    background: linear-gradient(180deg,#fff,#fbf8ff);
+    border-radius:14px;
+    padding:18px 20px;
+    text-align:center;
+    border:6px solid var(--border);
+    box-shadow: 0 30px 60px rgba(88,50,150,0.18);
+    min-width:260px;
+  }
+  .dialog h3{ margin:6px 0; font-size:20px; color:var(--text); }
+  .dialog p{ margin:6px 0 12px 0; color:#674b9a; }
+  .dialog .dialog-btn{
+    margin-top:8px;
+    padding:8px 14px;
+    border-radius:12px;
+    border:3px solid var(--border);
+    background: linear-gradient(90deg,var(--purple-2),var(--purple-1));
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  /* 音效按鈕小圖示（可選） */
+  .small{
+    font-size:13px;
+    color:#5f3f8f;
+    border-radius:10px;
+    padding:6px 8px;
+    background: rgba(255,255,255,0.6);
+    border:2px solid rgba(92,59,138,0.08);
+  }
+
+  /* 手機適配 */
+  @media (max-width:720px){
+    .grid{ grid-template-columns: repeat(4, 84px); grid-auto-rows:84px; gap:10px; }
+    .card{ width:84px; height:84px; }
+    .card-face{ border-radius:14px; border-width:4px; }
+    .icon{ width:48px; height:48px; }
+    .site-title{ font-size:26px; padding:10px 16px; border-radius:12px; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="site-title">記憶翻牌遊戲</div>
+    <div class="site-sub">可愛漫畫風 • 粉紫主題 • 圓角厚邊卡片</div>
+  </header>
+
+  <section class="controls">
+    <button id="newBtn" class="btn purple">重新開始</button>
+    <div class="small" id="pairsInfo">已配對: 0 / 10</div>
+    <div class="small" id="movesInfo">步數: 0</div>
+  </section>
+
+  <main class="game-wrap" role="application" aria-label="記憶翻牌遊戲">
+    <div class="grid" id="grid"></div>
+
+    <div class="status" aria-hidden="true">
+      <div>提示：配對成功會跳出恭喜視窗</div>
+    </div>
+  </main>
+
+  <!-- 成功配對彈窗 -->
+  <div class="overlay" id="matchOverlay" aria-hidden="true">
+    <div class="dialog">
+      <h3>🎉 恭喜配對成功！</h3>
+      <p>太棒了～繼續加油配完所有卡片吧！</p>
+      <button class="dialog-btn" id="closeMatch">繼續遊戲</button>
+    </div>
+  </div>
+
+  <!-- 全部完成彈窗 -->
+  <div class="overlay" id="winOverlay" aria-hidden="true">
+    <div class="dialog">
+      <h3>🌟 全部配對完成</h3>
+      <p id="winDetail">你用了 0 步，配對了 10 組！</p>
+      <button class="dialog-btn" id="playAgain">再玩一次</button>
+    </div>
+  </div>
+
+  <!-- SVG sprite：漫畫風小動物（線稿偏粗） -->
+  <svg style="display:none;" aria-hidden="true" focusable="false">
+    <symbol id="icon-bunny" viewBox="0 0 100 100">
+      <!-- 簡易漫畫風兔子 -->
+      <rect x="6" y="6" width="88" height="88" rx="14" fill="none"/>
+      <g transform="translate(0,2)" stroke="#3b2a62" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M50 24c-8 0-14 6-14 14s6 14 14 14 14-6 14-14-6-14-14-14z" fill="#fff6fb"/>
+        <path d="M38 30c-4-6-8-14-8-18 0-3 4-6 7-6 4 0 6 4 6 4" />
+        <path d="M62 30c4-6 8-14 8-18 0-3-4-6-7-6-4 0-6 4-6 4" />
+        <circle cx="42" cy="44" r="4" fill="#3b2a62"/>
+        <circle cx="58" cy="44" r="4" fill="#3b2a62"/>
+        <path d="M44 56c3 2 8 2 11 0" stroke-linecap="round"/>
+      </g>
+      <circle cx="35" cy="36" r="3" fill="#ffb7d0" opacity="0.7"/>
+      <circle cx="65" cy="36" r="3" fill="#ffb7d0" opacity="0.7"/>
+    </symbol>
+
+    <symbol id="icon-bear" viewBox="0 0 100 100">
+      <g stroke="#3b2a62" stroke-width="4" stroke-linejoin="round" fill="none">
+        <rect x="6" y="6" width="88" height="88" rx="14" fill="none"/>
+        <circle cx="50" cy="44" r="18" fill="#fff6f6"/>
+        <circle cx="36" cy="32" r="6" fill="#fff6f6"/>
+        <circle cx="64" cy="32" r="6" fill="#fff6f6"/>
+        <circle cx="42" cy="46" r="3" fill="#3b2a62"/>
+        <circle cx="58" cy="46" r="3" fill="#3b2a62"/>
+        <path d="M42 58c4 3 12 3 16 0" stroke-linecap="round"/>
+      </g>
+    </symbol>
+
+    <symbol id="icon-cat" viewBox="0 0 100 100">
+      <g stroke="#3b2a62" stroke-width="4" fill="none">
+        <rect x="6" y="6" width="88" height="88" rx="14" />
+        <path d="M30 36c8-12 32-12 40 0" fill="#fff6ff"/>
+        <path d="M30 36l-8-12 8 4zM70 36l8-12-8 4z" />
+        <circle cx="42" cy="48" r="4" fill="#3b2a62"/>
+        <circle cx="58" cy="48" r="4" fill="#3b2a62"/>
+        <path d="M46 60c3 2 8 2 10 0" />
+      </g>
+    </symbol>
+
+    <symbol id="icon-fox" viewBox="0 0 100 100">
+      <g stroke="#3b2a62" stroke-width="4" fill="none">
+        <rect x="6" y="6" width="88" height="88" rx="14" />
+        <path d="M50 28c-12 0-22 8-22 20s10 20 22 20 22-8 22-20-10-20-22-20z" fill="#fff2ea"/>
+        <path d="M32 28l-8-12 12 6zM68 28l8-12-12 6z"/>
+        <circle cx="44" cy="46" r="3" fill="#3b2a62"/>
+        <circle cx="56" cy="46" r="3" fill="#3b2a62"/>
+        <path d="M48 58c2 2 6 2 8 0" />
+      </g>
+    </symbol>
+
+    <symbol id="icon-penguin" viewBox="0 0 100 100">
+      <g stroke="#3b2a62" stroke-width="4" fill="none">
+        <rect x="6" y="6" width="88" height="88" rx="14" />
+        <path d="M38 28c-2 6-4 18 12 18s14-12 12-18" fill="#fff"/>
+        <path d="M30 46c0 14 10 22 20 22s20-8 20-22" fill="#e8f2ff"/>
+        <circle cx="46" cy="46" r="3" fill="#3b2a62"/>
+        <circle cx="54" cy="46" r="3" fill="#3b2a62"/>
+        <path d="M50 58c3 2 6 2 9 0" />
+      </g>
+    </symbol>
+
+    <symbol id="icon-duck" viewBox="0 0 100 100">
+      <g stroke="#3b2a62" stroke-width="4" fill="none">
+        <rect x="6" y="6" width="88" height="88" rx="14" />
+        <path d="M30 50c18-12 36-12 42 0 0 0 6 8-6 12-12 4-26 2-36-6z" fill="#fff9ea"/>
+        <circle cx="46" cy="44" r="3" fill="#3b2a62"/>
+        <path d="M62 46c3 1 8 1 10-1" stroke-linecap="round"/>
+      </g>
+    </symbol>
+
+    <symbol id="icon-frog" viewBox="0 0 100 100">
+      <g stroke="#3b2a62" stroke-width="4" fill="none">
+        <rect x="6" y="6" width="88" height="88" rx="14" />
+        <circle cx="50" cy="44" r="18" fill="#eafff2"/>
+        <circle cx="42" cy="40" r="3" fill="#3b2a62"/>
+        <circle cx="58" cy="40" r="3" fill="#3b2a62"/>
+        <path d="M44 56c6 4 12 4 18 0" />
+      </g>
+    </symbol>
+
+    <symbol id="icon-panda" viewBox="0 0 100 100">
+      <g stroke="#3b2a62" stroke-width="4" fill="none">
+        <rect x="6" y="6" width="88" height="88" rx="14" />
+        <circle cx="50" cy="46" r="18" fill="#fff"/>
+        <ellipse cx="42" cy="44" rx="6" ry="7" fill="#2f2a2f"/>
+        <ellipse cx="58" cy="44" rx="6" ry="7" fill="#2f2a2f"/>
+        <path d="M46 56c3 2 8 2 10 0" />
+      </g>
+    </symbol>
+
+    <symbol id="icon-koala" viewBox="0 0 100 100">
+      <g stroke="#3b2a62" stroke-width="4" fill="none">
+        <rect x="6" y="6" width="88" height="88" rx="14" />
+        <circle cx="50" cy="46" r="18" fill="#fff6f7"/>
+        <circle cx="36" cy="36" r="6" fill="#fff6f7"/>
+        <circle cx="64" cy="36" r="6" fill="#fff6f7"/>
+        <path d="M44 50c3 2 8 2 10 0" />
+      </g>
+    </symbol>
+
+    <symbol id="icon-tiger" viewBox="0 0 100 100">
+      <g stroke="#3b2a62" stroke-width="4" fill="none">
+        <rect x="6" y="6" width="88" height="88" rx="14" />
+        <path d="M50 34c-10 0-16 6-16 14s6 14 16 14 16-6 16-14-6-14-16-14z" fill="#fff6ea"/>
+        <path d="M40 30l-6-6M60 30l6-6" stroke-linecap="round"/>
+        <circle cx="44" cy="46" r="3" fill="#3b2a62"/>
+        <circle cx="56" cy="46" r="3" fill="#3b2a62"/>
+        <path d="M46 58c3 2 8 2 10 0" />
+      </g>
+    </symbol>
+  </svg>
+
+<script>
+/* ------- 遊戲資料與邏輯 ------- */
+const animalIds = [
+  'icon-bunny','icon-bear','icon-cat','icon-fox','icon-penguin',
+  'icon-duck','icon-frog','icon-panda','icon-koala','icon-tiger'
+]; // 共 10 種
+
+const grid = document.getElementById('grid');
+const newBtn = document.getElementById('newBtn');
+const pairsInfo = document.getElementById('pairsInfo');
+const movesInfo = document.getElementById('movesInfo');
+
+const matchOverlay = document.getElementById('matchOverlay');
+const closeMatch = document.getElementById('closeMatch');
+const winOverlay = document.getElementById('winOverlay');
+const playAgain = document.getElementById('playAgain');
+const winDetail = document.getElementById('winDetail');
+
+let deck = [];
+let firstCard = null;
+let secondCard = null;
+let lock = false;
+let matchedPairs = 0;
+let moves = 0;
+
+/* 建立 20 張牌（10 組）並打亂 */
+function initDeck(){
+  deck = [];
+  // 每個 animal 產生兩張
+  animalIds.forEach(id => {
+    deck.push({id, uid: id + '-a'});
+    deck.push({id, uid: id + '-b'});
+  });
+  // Fisher-Yates shuffle
+  for(let i = deck.length -1; i>0; i--){
+    const j = Math.floor(Math.random() * (i+1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+}
+
+/* 建立 DOM 卡片 */
+function buildGrid(){
+  grid.innerHTML = '';
+  deck.forEach((cardData, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.uid = cardData.uid;
+    card.dataset.animal = cardData.id;
+
+    card.innerHTML = `
+      <div class="card-inner" tabindex="0" role="button" aria-pressed="false">
+        <div class="card-face face-back" aria-hidden="false">
+          <!-- 背面可放可愛圖案或紋理 -->
+          <svg class="icon" viewBox="0 0 100 100" aria-hidden="true">
+            <rect x="0" y="0" width="100" height="100" rx="18" fill="url(#bgGrad)"></rect>
+          </svg>
+        </div>
+        <div class="card-face face-front" aria-hidden="true">
+          <!-- 正面：用 symbol -->
+          <svg class="icon" viewBox="0 0 100 100" aria-hidden="true">
+            <use href="#${cardData.id}"></use>
+          </svg>
+        </div>
+      </div>
+    `;
+
+    // 點擊翻牌
+    card.addEventListener('click', () => onCardClick(card));
+    // 支援鍵盤 Enter / Space
+    card.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        onCardClick(card);
+      }
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+/* 翻牌處理 */
+function onCardClick(card){
+  if(lock) return;
+  if(card.classList.contains('flip')) return;
+  if(card.classList.contains('matched')) return;
+
+  card.classList.add('flip');
+
+  if(!firstCard){
+    firstCard = card;
+    return;
+  }
+
+  secondCard = card;
+  lock = true;
+  moves++;
+  movesInfo.textContent = `步數: ${moves}`;
+
+  // 比對
+  const a = firstCard.dataset.animal;
+  const b = secondCard.dataset.animal;
+
+  if(a === b){
+    // 成功配對
+    firstCard.classList.add('matched');
+    secondCard.classList.add('matched');
+    matchedPairs++;
+    pairsInfo.textContent = `已配對: ${matchedPairs} / 10`;
+    showMatchPopup();
+
+    // 重置翻牌變數
+    setTimeout(() => {
+      resetTurn();
+      // 若全部配對完成
+      if(matchedPairs === 10){
+        setTimeout(()=> showWinPopup(), 350);
+      }
+    }, 200);
+  } else {
+    // 翻回去
+    setTimeout(() => {
+      firstCard.classList.remove('flip');
+      secondCard.classList.remove('flip');
+      resetTurn();
+    }, 900);
+  }
+}
+
+function resetTurn(){
+  firstCard = null;
+  secondCard = null;
+  lock = false;
+}
+
+function showMatchPopup(){
+  matchOverlay.classList.add('show');
+  matchOverlay.setAttribute('aria-hidden','false');
+}
+function hideMatchPopup(){
+  matchOverlay.classList.remove('show');
+  matchOverlay.setAttribute('aria-hidden','true');
+}
+function showWinPopup(){
+  winOverlay.classList.add('show');
+  winOverlay.setAttribute('aria-hidden','false');
+  winDetail.textContent = `你用了 ${moves} 步，配對了 ${matchedPairs} 組！`;
+}
+function hideWinPopup(){
+  winOverlay.classList.remove('show');
+  winOverlay.setAttribute('aria-hidden','true');
+}
+
+/* 重新開始 */
+function restartGame(){
+  initDeck();
+  buildGrid();
+  matchedPairs = 0;
+  moves = 0;
+  pairsInfo.textContent = `已配對: 0 / 10`;
+  movesInfo.textContent = `步數: 0`;
+  hideMatchPopup();
+  hideWinPopup();
+  resetTurn();
+}
+
+/* 綁定按鈕 */
+newBtn.addEventListener('click', restartGame);
+closeMatch.addEventListener('click', hideMatchPopup);
+playAgain.addEventListener('click', () => {
+  hideWinPopup();
+  restartGame();
+});
+
+/* 初始化漸層 defs */
+const defs = document.createElementNS('http://www.w3.org/2000/svg','svg');
+defs.setAttribute('style','position:absolute; width:0; height:0;');
+defs.innerHTML = `
+  <defs>
+    <linearGradient id="bgGrad" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#F8F5FF"/>
+      <stop offset="100%" stop-color="#F2E8FF"/>
+    </linearGradient>
+  </defs>
+`;
+document.body.appendChild(defs);
+
+/* 啟動遊戲 */
+restartGame();
+
+</script>
+
+</body>
 </html>
+
   
