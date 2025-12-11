@@ -258,119 +258,139 @@
     </div>
   </div>
 
-  <!-- SVG sprite：漫畫風小動物（線稿偏粗） -->
-  <svg style="display:none;" aria-hidden="true" focusable="false">
-    <symbol id="icon-bunny" viewBox="0 0 100 100">
-      <!-- 簡易漫畫風兔子 -->
-      <rect x="6" y="6" width="88" height="88" rx="14" fill="none"/>
-      <g transform="translate(0,2)" stroke="#3b2a62" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none">
-        <path d="M50 24c-8 0-14 6-14 14s6 14 14 14 14-6 14-14-6-14-14-14z" fill="#fff6fb"/>
-        <path d="M38 30c-4-6-8-14-8-18 0-3 4-6 7-6 4 0 6 4 6 4" />
-        <path d="M62 30c4-6 8-14 8-18 0-3-4-6-7-6-4 0-6 4-6 4" />
-        <circle cx="42" cy="44" r="4" fill="#3b2a62"/>
-        <circle cx="58" cy="44" r="4" fill="#3b2a62"/>
-        <path d="M44 56c3 2 8 2 11 0" stroke-linecap="round"/>
-      </g>
-      <circle cx="35" cy="36" r="3" fill="#ffb7d0" opacity="0.7"/>
-      <circle cx="65" cy="36" r="3" fill="#ffb7d0" opacity="0.7"/>
-    </symbol>
+  <!-- SVG sprite：新版 漫畫風小動物（粉紫厚描邊版） -->
+<svg style="display:none;" aria-hidden="true" focusable="false">
 
-    <symbol id="icon-bear" viewBox="0 0 100 100">
-      <g stroke="#3b2a62" stroke-width="4" stroke-linejoin="round" fill="none">
-        <rect x="6" y="6" width="88" height="88" rx="14" fill="none"/>
-        <circle cx="50" cy="44" r="18" fill="#fff6f6"/>
-        <circle cx="36" cy="32" r="6" fill="#fff6f6"/>
-        <circle cx="64" cy="32" r="6" fill="#fff6f6"/>
-        <circle cx="42" cy="46" r="3" fill="#3b2a62"/>
-        <circle cx="58" cy="46" r="3" fill="#3b2a62"/>
-        <path d="M42 58c4 3 12 3 16 0" stroke-linecap="round"/>
-      </g>
-    </symbol>
+  <!-- 卡片背面：星星 + 雲朵漫畫風 -->
+  <symbol id="card-back-pattern" viewBox="0 0 100 100">
+    <rect x="0" y="0" width="100" height="100" rx="18"
+          fill="url(#bgGrad)"/>
+    <g stroke="#5C3B8A" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.22">
+      <circle cx="30" cy="30" r="10"/>
+      <circle cx="70" cy="40" r="8"/>
+      <path d="M20 70c12-10 30-10 40 0s22 10 30 0"/>
+    </g>
+  </symbol>
 
-    <symbol id="icon-cat" viewBox="0 0 100 100">
-      <g stroke="#3b2a62" stroke-width="4" fill="none">
-        <rect x="6" y="6" width="88" height="88" rx="14" />
-        <path d="M30 36c8-12 32-12 40 0" fill="#fff6ff"/>
-        <path d="M30 36l-8-12 8 4zM70 36l8-12-8 4z" />
-        <circle cx="42" cy="48" r="4" fill="#3b2a62"/>
-        <circle cx="58" cy="48" r="4" fill="#3b2a62"/>
-        <path d="M46 60c3 2 8 2 10 0" />
-      </g>
-    </symbol>
+  <!-- 兔子 -->
+  <symbol id="icon-bunny" viewBox="0 0 100 100">
+    <g stroke="#5C3B8A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="#FFF7FF">
+      <rect x="6" y="6" width="88" height="88" rx="20" fill="#F7EDFF"/>
+      <circle cx="50" cy="50" r="22"/>
+      <path d="M34 32c-6-10-6-20 0-22s10 4 12 8"/>
+      <path d="M66 32c6-10 6-20 0-22s-10 4-12 8"/>
+      <circle cx="42" cy="48" r="5" fill="#5C3B8A"/>
+      <circle cx="58" cy="48" r="5" fill="#5C3B8A"/>
+      <path d="M44 60c4 3 12 3 16 0"/>
+    </g>
+  </symbol>
 
-    <symbol id="icon-fox" viewBox="0 0 100 100">
-      <g stroke="#3b2a62" stroke-width="4" fill="none">
-        <rect x="6" y="6" width="88" height="88" rx="14" />
-        <path d="M50 28c-12 0-22 8-22 20s10 20 22 20 22-8 22-20-10-20-22-20z" fill="#fff2ea"/>
-        <path d="M32 28l-8-12 12 6zM68 28l8-12-12 6z"/>
-        <circle cx="44" cy="46" r="3" fill="#3b2a62"/>
-        <circle cx="56" cy="46" r="3" fill="#3b2a62"/>
-        <path d="M48 58c2 2 6 2 8 0" />
-      </g>
-    </symbol>
+  <!-- 熊 -->
+  <symbol id="icon-bear" viewBox="0 0 100 100">
+    <g stroke="#5C3B8A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="6" y="6" width="88" height="88" rx="20" fill="#F5E8FF"/>
+      <circle cx="50" cy="48" r="22" fill="#FFF5FA"/>
+      <circle cx="36" cy="32" r="8" fill="#FFF5FA"/>
+      <circle cx="64" cy="32" r="8" fill="#FFF5FA"/>
+      <circle cx="44" cy="50" r="5" fill="#5C3B8A"/>
+      <circle cx="56" cy="50" r="5" fill="#5C3B8A"/>
+      <path d="M44 60c4 3 12 3 16 0"/>
+    </g>
+  </symbol>
 
-    <symbol id="icon-penguin" viewBox="0 0 100 100">
-      <g stroke="#3b2a62" stroke-width="4" fill="none">
-        <rect x="6" y="6" width="88" height="88" rx="14" />
-        <path d="M38 28c-2 6-4 18 12 18s14-12 12-18" fill="#fff"/>
-        <path d="M30 46c0 14 10 22 20 22s20-8 20-22" fill="#e8f2ff"/>
-        <circle cx="46" cy="46" r="3" fill="#3b2a62"/>
-        <circle cx="54" cy="46" r="3" fill="#3b2a62"/>
-        <path d="M50 58c3 2 6 2 9 0" />
-      </g>
-    </symbol>
+  <!-- 貓 -->
+  <symbol id="icon-cat" viewBox="0 0 100 100">
+    <g stroke="#5C3B8A" stroke-width="5" stroke-linejoin="round" fill="#FFF1FF">
+      <rect x="6" y="6" width="88" height="88" rx="20" fill="#F5E8FF"/>
+      <path d="M30 40c10-14 30-14 40 0"/>
+      <path d="M30 40l-8-12 10 4z"/>
+      <path d="M70 40l8-12-10 4z"/>
+      <circle cx="42" cy="52" r="5" fill="#5C3B8A"/>
+      <circle cx="58" cy="52" r="5" fill="#5C3B8A"/>
+      <path d="M46 64c3 2 8 2 10 0"/>
+    </g>
+  </symbol>
 
-    <symbol id="icon-duck" viewBox="0 0 100 100">
-      <g stroke="#3b2a62" stroke-width="4" fill="none">
-        <rect x="6" y="6" width="88" height="88" rx="14" />
-        <path d="M30 50c18-12 36-12 42 0 0 0 6 8-6 12-12 4-26 2-36-6z" fill="#fff9ea"/>
-        <circle cx="46" cy="44" r="3" fill="#3b2a62"/>
-        <path d="M62 46c3 1 8 1 10-1" stroke-linecap="round"/>
-      </g>
-    </symbol>
+  <!-- 狐狸 -->
+  <symbol id="icon-fox" viewBox="0 0 100 100">
+    <g stroke="#5C3B8A" stroke-width="5" fill="#FFF2EE" stroke-linejoin="round">
+      <rect x="6" y="6" width="88" height="88" rx="20" fill="#F7ECFF"/>
+      <path d="M50 32c-14 0-24 10-24 20s10 20 24 20 24-10 24-20-10-20-24-20z"/>
+      <path d="M32 32l-8-12 12 6z"/>
+      <path d="M68 32l8-12-12 6z"/>
+      <circle cx="44" cy="50" r="4" fill="#5C3B8A"/>
+      <circle cx="56" cy="50" r="4" fill="#5C3B8A"/>
+      <path d="M48 62c3 2 6 2 8 0"/>
+    </g>
+  </symbol>
 
-    <symbol id="icon-frog" viewBox="0 0 100 100">
-      <g stroke="#3b2a62" stroke-width="4" fill="none">
-        <rect x="6" y="6" width="88" height="88" rx="14" />
-        <circle cx="50" cy="44" r="18" fill="#eafff2"/>
-        <circle cx="42" cy="40" r="3" fill="#3b2a62"/>
-        <circle cx="58" cy="40" r="3" fill="#3b2a62"/>
-        <path d="M44 56c6 4 12 4 18 0" />
-      </g>
-    </symbol>
+  <!-- 企鵝 -->
+  <symbol id="icon-penguin" viewBox="0 0 100 100">
+    <g stroke="#5C3B8A" stroke-width="5" stroke-linecap="round">
+      <rect x="6" y="6" width="88" height="88" rx="20" fill="#EDEAFF"/>
+      <path d="M38 34c-2 6-4 18 12 18s14-12 12-18" fill="#FFFFFF"/>
+      <path d="M30 50c0 14 10 24 20 24s20-10 20-24" fill="#EEF4FF"/>
+      <circle cx="46" cy="48" r="4" fill="#5C3B8A"/>
+      <circle cx="54" cy="48" r="4" fill="#5C3B8A"/>
+      <path d="M50 60c3 2 6 2 9 0"/>
+    </g>
+  </symbol>
 
-    <symbol id="icon-panda" viewBox="0 0 100 100">
-      <g stroke="#3b2a62" stroke-width="4" fill="none">
-        <rect x="6" y="6" width="88" height="88" rx="14" />
-        <circle cx="50" cy="46" r="18" fill="#fff"/>
-        <ellipse cx="42" cy="44" rx="6" ry="7" fill="#2f2a2f"/>
-        <ellipse cx="58" cy="44" rx="6" ry="7" fill="#2f2a2f"/>
-        <path d="M46 56c3 2 8 2 10 0" />
-      </g>
-    </symbol>
+  <!-- 小鴨 -->
+  <symbol id="icon-duck" viewBox="0 0 100 100">
+    <g stroke="#5C3B8A" stroke-width="5" stroke-linecap="round">
+      <rect x="6" y="6" width="88" height="88" rx="20" fill="#F7EFFF"/>
+      <path d="M30 50c18-12 36-12 42 0 0 0 6 8-6 12-12 4-26 2-36-6z" fill="#FFF9EA"/>
+      <circle cx="46" cy="44" r="4" fill="#5C3B8A"/>
+      <path d="M62 46c4 2 8 1 10-1"/>
+    </g>
+  </symbol>
 
-    <symbol id="icon-koala" viewBox="0 0 100 100">
-      <g stroke="#3b2a62" stroke-width="4" fill="none">
-        <rect x="6" y="6" width="88" height="88" rx="14" />
-        <circle cx="50" cy="46" r="18" fill="#fff6f7"/>
-        <circle cx="36" cy="36" r="6" fill="#fff6f7"/>
-        <circle cx="64" cy="36" r="6" fill="#fff6f7"/>
-        <path d="M44 50c3 2 8 2 10 0" />
-      </g>
-    </symbol>
+  <!-- 青蛙 -->
+  <symbol id="icon-frog" viewBox="0 0 100 100">
+    <g stroke="#5C3B8A" stroke-width="5" stroke-linecap="round">
+      <rect x="6" y="6" width="88" height="88" rx="20" fill="#F0F8FF"/>
+      <circle cx="50" cy="44" r="20" fill="#EAFFF3"/>
+      <circle cx="42" cy="40" r="4" fill="#5C3B8A"/>
+      <circle cx="58" cy="40" r="4" fill="#5C3B8A"/>
+      <path d="M44 56c8 4 12 4 18 0"/>
+    </g>
+  </symbol>
 
-    <symbol id="icon-tiger" viewBox="0 0 100 100">
-      <g stroke="#3b2a62" stroke-width="4" fill="none">
-        <rect x="6" y="6" width="88" height="88" rx="14" />
-        <path d="M50 34c-10 0-16 6-16 14s6 14 16 14 16-6 16-14-6-14-16-14z" fill="#fff6ea"/>
-        <path d="M40 30l-6-6M60 30l6-6" stroke-linecap="round"/>
-        <circle cx="44" cy="46" r="3" fill="#3b2a62"/>
-        <circle cx="56" cy="46" r="3" fill="#3b2a62"/>
-        <path d="M46 58c3 2 8 2 10 0" />
-      </g>
-    </symbol>
-  </svg>
+  <!-- 熊貓 -->
+  <symbol id="icon-panda" viewBox="0 0 100 100">
+    <g stroke="#5C3B8A" stroke-width="5" stroke-linecap="round">
+      <rect x="6" y="6" width="88" height="88" rx="20" fill="#F2EAFF"/>
+      <circle cx="50" cy="48" r="22" fill="#FFF"/>
+      <ellipse cx="42" cy="46" rx="7" ry="8" fill="#3C3440"/>
+      <ellipse cx="58" cy="46" rx="7" ry="8" fill="#3C3440"/>
+      <path d="M46 60c3 2 8 2 10 0"/>
+    </g>
+  </symbol>
 
+  <!-- 無尾熊 -->
+  <symbol id="icon-koala" viewBox="0 0 100 100">
+    <g stroke="#5C3B8A" stroke-width="5" stroke-linejoin="round">
+      <rect x="6" y="6" width="88" height="88" rx="20" fill="#F5EAFE"/>
+      <circle cx="50" cy="48" r="22" fill="#FFF6F9"/>
+      <circle cx="36" cy="36" r="8" fill="#FFF6F9"/>
+      <circle cx="64" cy="36" r="8" fill="#FFF6F9"/>
+      <path d="M44 54c4 3 12 3 16 0"/>
+    </g>
+  </symbol>
+
+  <!-- 小老虎 -->
+  <symbol id="icon-tiger" viewBox="0 0 100 100">
+    <g stroke="#5C3B8A" stroke-width="5" stroke-linecap="round">
+      <rect x="6" y="6" width="88" height="88" rx="20" fill="#F8ECFF"/>
+      <path d="M50 36c-12 0-18 8-18 16s6 16 18 16 18-8 18-16-6-16-18-16z" fill="#FFF6EA"/>
+      <path d="M40 32l-8-6M60 32l8-6"/>
+      <circle cx="44" cy="50" r="4" fill="#5C3B8A"/>
+      <circle cx="56" cy="50" r="4" fill="#5C3B8A"/>
+      <path d="M46 62c3 2 8 2 10 0"/>
+    </g>
+  </symbol>
+</svg>
 <script>
 /* ------- 遊戲資料與邏輯 ------- */
 const animalIds = [
